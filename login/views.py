@@ -121,6 +121,11 @@ def registerPage(request):
             )
             email.attach_alternative(html_content,"text/html")
             email.send()
+            new_user = authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'],
+                                    )
+            login(request, new_user)
+            print('account created')
             messages.success(request, f'Account created for {username}!')
             return redirect('module1:home')
     else:
@@ -140,8 +145,6 @@ def loginPage(request):
         if request.method == 'POST':
             username = request.POST.get('username')
             password = request.POST.get('password')
-            print(username)
-            print('hi')
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
